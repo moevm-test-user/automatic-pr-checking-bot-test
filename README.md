@@ -1,6 +1,6 @@
 # automatic-pr-checking-bot-test
 
 ## Баллы
-| last name | first name | stepik id | Итог |
+| Surname | Name | stepik id | 0 |
 |:---------:|:----------:|:---------:|:----:|
 | Дурачек   | 123        | Пукич     |  0   |
