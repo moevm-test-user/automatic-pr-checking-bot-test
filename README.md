@@ -1,6 +1,6 @@
 # automatic-pr-checking-bot-test
 
 ## Баллы
-| Surname | Name | stepik id | 1 |
+| Surname | Name | stepik id | lb1 |
 |:---------:|:------:|:-----:|:-:|
-| Kolovanov | Rodion | 36307378 | 0 |
+| Kolovanov | Rodion | 36307378 | 5 |
