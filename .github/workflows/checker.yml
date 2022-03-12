@@ -10,7 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions-ecosystem/action-size@v2
-      id: size
     - uses: actions-ecosystem/action-remove-labels@v1
       with:
           github_token: ${{ github.token }}
@@ -19,12 +18,12 @@ jobs:
       id: find-pr
       with:
           state: open
-    - run: echo "Your PR is ${PR}"
+    - run: echo "Your PR number is ${pr-num}."
       if: success() && steps.find-pr.outputs.number
       env:
-        PR: ${{ steps.find-pr.outputs.pr }}
+        pr-num: ${{ steps.find-pr.outputs.pr }}
     - name: check-pr
       run: |
-        docker run -v ${PR_BOT_CONFIG_PATH} rkolovanov/pr-automation:latest python3.8 pr.py "${{ github.token }}" ${{ steps.findPr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
+        docker run -v ${PR_BOT_CONFIG_PATH} rkolovanov/pr-automation:latest python3.8 pr.py "${{ github.token }}" ${{ steps.find-pr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
        
 
