@@ -9,28 +9,31 @@ jobs:
     runs-on: self-hosted
     steps:
     - id: checkout
+      name: Checkout
       uses: actions/checkout@v2
 
     - id: action-size
+      name: Size
       uses: actions-ecosystem/action-size@v2
 
     - id: action-remove-labels
+      name: Remove labels
       uses: actions-ecosystem/action-remove-labels@v1
       with:
           github_token: ${{ github.token }}
           labels: ${{ steps.action-size.outputs.stale_labels }}
 
     - id: find-pr
+      name: Find PR
       uses: jwalton/gh-find-current-pr@v1
       with:
           state: open
 
     - id: print-pr-number
+      name: PR number
       if: success() && steps.find-pr.outputs.pr
       run: echo "Your PR number is ${{ steps.find-pr.outputs.pr }}"
 
     - id: check-pr
-      run: docker run \
-        -v ${PR_BOT_CONFIG_PATH}:/config \
-        rkolovanov/pr-automation:latest \
-        python3.8 pr.py "${{ github.token }}" ${{ steps.find-pr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
+      name: Check PR
+      run: docker run -v ${PR_BOT_CONFIG_PATH}:/config rkolovanov/pr-automation:latest python3.8 pr.py "${{ github.token }}" ${{ steps.find-pr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
