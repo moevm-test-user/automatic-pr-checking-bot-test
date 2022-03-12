@@ -25,5 +25,4 @@ jobs:
         PR: ${{ steps.find-pr.outputs.pr }}
     - name: check-pr
       run: |
-        docker login rkolovanov && docker run -v ${PR_BOT_CONFIG_PATH}:/config osll/pr1-automation python3.8 project/scripts/check_pull_request.py 123 123 123 123
-       
+        docker run -v ${PR_BOT_CONFIG_PATH}:/config osll/pr1-automation python3.8 project/scripts/check_pull_request.py 123 123 123 123
