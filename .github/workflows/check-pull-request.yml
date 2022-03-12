@@ -19,10 +19,10 @@ jobs:
       id: find-pr
       with:
           state: open
-    - run: echo "Your PR number is ${pr-num}."
+    - run: echo "Your PR number is ${pr}."
       if: success() && steps.find-pr.outputs.number
       env:
-        pr-num: ${{ steps.find-pr.outputs.pr }}
+        pr: ${{ steps.find-pr.outputs.pr }}
     - name: check-pr
       run: |
         docker run -v ${PR_BOT_CONFIG_PATH}:/config rkolovanov/pr-automation:latest python3.8 pr.py "${{ github.token }}" ${{ steps.find-pr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
