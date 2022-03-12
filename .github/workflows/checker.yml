@@ -1,6 +1,8 @@
-name: checker
+name: check-pull-request
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, reopened, edited]
 
 jobs:
   build:
@@ -9,20 +11,19 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions-ecosystem/action-size@v2
       id: size
-
     - uses: actions-ecosystem/action-remove-labels@v1
       with:
           github_token: ${{ github.token }}
           labels: ${{ steps.size.outputs.stale_labels }}
     - uses: jwalton/gh-find-current-pr@v1
-      id: findPr
+      id: find-pr
       with:
           state: open
     - run: echo "Your PR is ${PR}"
-      if: success() && steps.findPr.outputs.number
+      if: success() && steps.find-pr.outputs.number
       env:
-        PR: ${{ steps.findPr.outputs.pr }}
-    - name: check
+        PR: ${{ steps.find-pr.outputs.pr }}
+    - name: check-pr
       run: |
         docker run -v ${PR_BOT_CONFIG_PATH}:/config osll/pr1-automation python3.8 project/scripts/check_pull_request.py 123 123 123 123
        
