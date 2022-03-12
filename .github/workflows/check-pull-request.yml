@@ -8,23 +8,29 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v2
-    - id: size
+    - id: checkout
+      uses: actions/checkout@v2
+
+    - id: action-size
       uses: actions-ecosystem/action-size@v2
-    - uses: actions-ecosystem/action-remove-labels@v1
+
+    - id: action-remove-labels
+      uses: actions-ecosystem/action-remove-labels@v1
       with:
           github_token: ${{ github.token }}
-          labels: ${{ steps.size.outputs.stale_labels }}
-    - uses: jwalton/gh-find-current-pr@v1
-      id: find-pr
+          labels: ${{ steps.action-size.outputs.stale_labels }}
+
+    - id: find-pr
+      uses: jwalton/gh-find-current-pr@v1
       with:
           state: open
-    - run: echo "Your PR number is ${pr}."
-      if: success() && steps.find-pr.outputs.number
-      env:
-        pr: ${{ steps.find-pr.outputs.pr }}
-    - name: check-pr
-      run: |
-        docker run -v ${PR_BOT_CONFIG_PATH}:/config rkolovanov/pr-automation:latest python3.8 pr.py "${{ github.token }}" ${{ steps.find-pr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
-       
 
+    - id: print-pr-number
+      if: success() && steps.find-pr.outputs.pr
+      run: echo "Your PR number is ${{ steps.find-pr.outputs.pr }}"
+
+    - id: check-pr
+      run: docker run \
+        -v ${PR_BOT_CONFIG_PATH}:/config \
+        rkolovanov/pr-automation:latest \
+        python3.8 pr.py "${{ github.token }}" ${{ steps.find-pr.outputs.pr }} ${{ github.event.repository.full_name }} ${{ github.event.sender.login }}
